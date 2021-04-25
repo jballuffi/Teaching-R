@@ -4,14 +4,17 @@ library(data.table)
 library(lubridate)
 
 #fread is an efficient way to read in data that's automatically classified as a data.table
-DT <- fread("Input/mtcars.csv")
+f <- fread("Input/foraging_data.csv")
 #alternatively you can convert a data.frame into a data.table with the function as.data.table()
+c <- as.data.table(mtcars)
 
 
+#syntax for data.table:
 
-#syntax for data.table
 # DT[i, j, by]
+
 # [with i, do j, by group]
+
 ### once you learn this you are set!
 
 
@@ -19,61 +22,58 @@ DT <- fread("Input/mtcars.csv")
 # Examples of with I's ----
 
 #grab rows where car had 3 gears
-DT[gear == 3]
-
-#grab rows with less than 3 gears
-DT[gear > 3]
+c[gear == 3]
 
 #grab rows with more than 3 gears
-DT[gear < 3]
+c[gear > 3]
 
 #grab rows with any number other than 3 gears (two options)
-DT[gear != 3]
+c[gear != 3]
 
-#create new datatable with subset data
-threegear <- DT[gear == 3]
+#create new data.table with subset data
+threegear <- c[gear == 3]
 
 #subset for cars with 3 or 4 gears
-DT[gear == 3 | gear == 4]
+c[gear == 3 | gear == 4]
 
 #subset for cars with 3 gears and VS of 0
-DT[gear == 3 & vs == 0]
+c[gear == 3 & vs == 0]
 
 
 # Examples of do J's ----
 
 #calculate mean gear with all data
-DT[, mean(gear)]
+c[, mean(gear)]
 
 #with vs of 0, calculate mean gear
-DT[vs == 0, mean(gear)]
+c[vs == 0, mean(gear)]
 
 #create a new column to classify cars based on mpg
 
 #with cars that have mpg < 25, classify as a gas guzzler
-DT[mpg < 25, classification := "gas guzzler"]
+c[mpg < 25, classification := "gas guzzler"]
 #with cars leftover, classify as gas mazer
-DT[is.na(classification), classification := "gas mazer"]
+c[is.na(classification), classification := "gas mazer"]
 
 
 # Examples of By's----
 
 #calculate mean mpg by gear
-DT[, mean(mpg), by = gear]
+c[, mean(mpg), by = gear]
 
 #save mean mpg by gears as new datatable
-MeanMPG <- DT[, mean(mpg), by = gear]
+MeanMPG <- c[, mean(mpg), by = gear]
 setnames(MeanMPG, "V1", "Meanmpg")
 
 #calc mean and sd for mpg by gear, save as new datatable
-MPG <- DT[, .(mean(mpg), sd(mpg)), by = gear] #the period is needed!
+MPG <- c[, .(mean(mpg), sd(mpg)), by = gear] #the period is needed!
 setnames(MPG, c("V1", "V2"), c("Meanmpg", "SDmpg"))
 
 
 #Example of a complete i, j, by----
 
 #with gas guzzlers, calculate mean disp, by gear
-DT[classification == "gas guzzler", mean(disp), by = gear]
+c[classification == "gas guzzler", mean(disp), by = gear]
 
 #next steps: 
 #working with multiple columns simultaneously
@@ -82,8 +82,7 @@ DT[classification == "gas guzzler", mean(disp), by = gear]
 #lapply
 #melt 
 #dcast
-
-
+#tstrsplit
 
 
 #date time with lynx data ----
