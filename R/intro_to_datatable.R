@@ -5,23 +5,7 @@ library(lubridate)
 
 #fread is an efficient way to read in data that's automatically classified as a data.table
 DT <- fread("Input/mtcars.csv")
-lynx <- fread("Input/lynx_hunt_audio_2016_2020.csv")
-
-
-#create foraging data
-hablist<-c("open", "forest", "shrub", "bog")
-nrows<-200
-Data<-data.table(
-  feedrate = c(runif(nrows/2, 10, 20), runif(nrows/2, 100, 200)),
-  unit = rep(c("kg/day", "g/day"), each = nrows/2),
-  ID = sample(LETTERS[1:5], replace = TRUE),
-  date = seq.Date(as.Date("2018/01/01"), as.Date("2021/01/01"), length.out = nrows),
-  temp = runif(nrows, 0, 25),
-  habitat = sample(hablist, replace = TRUE),
-  social = sample(1:2, replace = TRUE)
-)
-
-
+#alternatively you can convert a data.frame into a data.table with the function as.data.table()
 
 
 
