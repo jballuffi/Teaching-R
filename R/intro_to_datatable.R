@@ -1,7 +1,9 @@
 # script for learning data.table
+# Author: Juliana Balluffi-Fry
 
 library(data.table)
 library(lubridate)
+library(ggplot2)
 
 #fread is an efficient way to read in data that's automatically classified as a data.table
 f <- fread("Input/foraging_data.csv")
@@ -19,7 +21,8 @@ c <- as.data.table(mtcars)
 
 
 
-# Examples of with I's ----
+
+# Examples of the I's -----------------------------------------------------
 
 #grab rows where car had 3 gears
 c[gear == 3]
@@ -40,7 +43,8 @@ c[gear == 3 | gear == 4]
 c[gear == 3 & vs == 0]
 
 
-# Examples of do J's ----
+
+# Examples of the J's -----------------------------------------------------
 
 #calculate mean gear with all data
 c[, mean(gear)]
@@ -49,17 +53,23 @@ c[, mean(gear)]
 c[vs == 0, mean(gear)]
 
 #create a new column to classify cars based on mpg
-
 #with cars that have mpg < 25, classify as a gas guzzler
 c[mpg < 25, classification := "gas guzzler"]
+
 #with cars leftover, classify as gas mazer
 c[is.na(classification), classification := "gas mazer"]
 
 
-# Examples of By's----
+
+# Examples of the by's ----------------------------------------------------
+
+#you need to have at least a j to do a by
 
 #calculate mean mpg by gear
 c[, mean(mpg), by = gear]
+
+#count number of data points by gear
+c[, .N, by = gear]
 
 #save mean mpg by gears as new datatable
 MeanMPG <- c[, mean(mpg), by = gear]
