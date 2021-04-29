@@ -255,25 +255,32 @@ ggplot(feed)+
 #like in this model
 summary(lm(feedrate ~ foodtype + region, data = feed))
 
+#but we want to run this model by ID or by year and get multiple model outputs
 
-rsq(lm(feedrate~foodtype + date, data=feed))
+#this line extracts the model coefficients, transposes them (t), and outputs them as a data.table 
+#models are run by ID
+feed[, data.table(t(coef(lm(feedrate ~ foodtype + date)))), by = ID]
 
-coef(lm(feedrate~foodtype + date, data=feed))
+#next we can do the same but run models by year and by ID
+feed[, data.table(t(coef(lm(feedrate ~ foodtype + date)))), by = .(ID, year)]
 
-feed[, coef(lm(feedrate~foodtype + date))]
-feed[ID=="D", coef(lm(feedrate~foodtype + date))]
-feed[, coef(lm(feedrate~foodtype + date)), by=ID]
-mods<- feed[, data.table(t(coef(lm(feedrate~foodtype + date)))), by=ID]
+#If we want to get fancy we can make our own function that extracts more information from models
+#then we can run our function by the group of our choice
 
+#requires rsq package and arm package
+library(rsq)
+library(arm)
 
-
-CNRSF <- function(yvar, xvar1, xvar2) {
+#this function extracts coef, se, R2s, and creates a table of this output
+makemod <- function(yvar, xvar1, xvar2) {
   # Make the model
   model <- lm(yvar ~ xvar1 + xvar2)
   # Transpose the coef of the model and cast as data.table
   coefOut <- data.table(t(coef(model)))
   # Transpose the standard error coef of the model and cast as data.table
   secoefOut <- data.table(t(se.coef(model)))
+  #extract r-squared from model
+  rsqOut <- data.table(rsq(model))
   #label the column name for the rsqOut
   names(rsqOut)<-c("rsq")
   # Add 'se-' prefix to standard error coef table
@@ -282,13 +289,21 @@ CNRSF <- function(yvar, xvar1, xvar2) {
   return(data.table(coefOut, secoefOut, rsqOut))
 }
 
-#write your own function, or model, and run by group
-#lapply
-#dcast
+#run the function by ID
+modout<- feed[, makemod(yvar=feedrate, xvar1=foodtype, xvar2=date), by=ID]
 
 
 
-#date time with lynx data ----
+# Additional example of how to use data.table to calculate proportion --------
+
+#no data here just a code  example
+#this would work on observation data, where each row of data is a species observation
+
+#sum number of observations by species code and latitude group
+DT2 <- DT[, .N, by=c('species', 'lat_group')] #this will create a column called N
+
+#divide the sum of each individual species by the sum of all observation in a lat group
+DT2[, props := N/sum(N), by=lat_group] #creates a new column called props
 
 
 
