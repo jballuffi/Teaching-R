@@ -185,6 +185,7 @@ f[, date := ymd(date)]
 f[, year := year(date)]
 
 #alternative solution to creating year using the data.table function tstrsplit
+#take the date column, split at the "-", and keep the 1st split item (year)
 f[, year2 := tstrsplit(date, "-", keep=1)]
 
 
@@ -223,7 +224,6 @@ f[, .(mean(browse), mean(graze))]
 ggplot(f)+
   geom_point(aes(x=date, y=graze))+
   geom_point(aes(x=date, y=browse), color="blue3")
-
 
 #solution: the melt function 
 
