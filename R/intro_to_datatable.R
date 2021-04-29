@@ -259,10 +259,10 @@ summary(lm(feedrate ~ foodtype + region, data = feed))
 
 #this line extracts the model coefficients, transposes them (t), and outputs them as a data.table 
 #models are run by ID
-feed[, data.table(t(coef(lm(feedrate ~ foodtype + date)))), by = ID]
+feed[, data.table(t(coef(lm(feedrate ~ foodtype + region)))), by = ID]
 
 #next we can do the same but run models by year and by ID
-feed[, data.table(t(coef(lm(feedrate ~ foodtype + date)))), by = .(ID, year)]
+feed[, data.table(t(coef(lm(feedrate ~ foodtype + region)))), by = .(ID, year)]
 
 #If we want to get fancy we can make our own function that extracts more information from models
 #then we can run our function by the group of our choice
@@ -290,7 +290,7 @@ makemod <- function(yvar, xvar1, xvar2) {
 }
 
 #run the function by ID
-modout<- feed[, makemod(yvar=feedrate, xvar1=foodtype, xvar2=date), by=ID]
+modout<- feed[, makemod(yvar=feedrate, xvar1=foodtype, xvar2=region), by=ID]
 
 
 
