@@ -46,6 +46,12 @@ cars[gear == 3 & vs == 0]
 
 # Examples of the J's -----------------------------------------------------
 
+#count the number of rows in the data
+#.N is a special symbol in data.table, it counts the number of rows
+#.N is not a function, you can't apply it to anything specific (e.g. this wouldn't work: .N(gear))
+#other examples of species symbols .SD, .BY, .I, but we wont get into those today
+cars[, .N]
+
 #calculate mean gear with all data
 cars[, mean(gear)]
 
