@@ -8,7 +8,7 @@ library(ggplot2)
 #fread is an efficient way to read in data that's automatically classified as a data.table
 f <- fread("Input/foraging_data.csv")
 #alternatively you can convert a data.frame into a data.table with the function as.data.table()
-c <- as.data.table(mtcars)
+cars <- as.data.table(mtcars)
 
 
 #syntax for data.table:
@@ -25,39 +25,39 @@ c <- as.data.table(mtcars)
 # Examples of the I's -----------------------------------------------------
 
 #grab rows where car had 3 gears
-c[gear == 3]
+cars[gear == 3]
 
 #grab rows with more than 3 gears
-c[gear > 3]
+cars[gear > 3]
 
 #grab rows with any number other than 3 gears (two options)
-c[gear != 3]
+cars[gear != 3]
 
 #create new data.table with subset data
 threegear <- c[gear == 3]
 
 #subset for cars with 3 or 4 gears
-c[gear == 3 | gear == 4]
+cars[gear == 3 | gear == 4]
 
 #subset for cars with 3 gears and VS of 0
-c[gear == 3 & vs == 0]
+cars[gear == 3 & vs == 0]
 
 
 
 # Examples of the J's -----------------------------------------------------
 
 #calculate mean gear with all data
-c[, mean(gear)]
+cars[, mean(gear)]
 
 #with vs of 0, calculate mean gear
-c[vs == 0, mean(gear)]
+cars[vs == 0, mean(gear)]
 
 #create a new column to classify cars based on mpg
 #with cars that have mpg < 25, classify as a gas guzzler
-c[mpg < 25, classification := "gas guzzler"]
+cars[mpg < 25, classification := "gas guzzler"]
 
 #with cars leftover, classify as gas mazer
-c[is.na(classification), classification := "gas mazer"]
+cars[is.na(classification), classification := "gas mazer"]
 
 
 
@@ -66,17 +66,17 @@ c[is.na(classification), classification := "gas mazer"]
 #you need to have at least a j to do a by
 
 #calculate mean mpg by gear
-c[, mean(mpg), by = gear]
+cars[, mean(mpg), by = gear]
 
 #count number of data points by gear
-c[, .N, by = gear]
+cars[, .N, by = gear]
 
 #save mean mpg by gears as new datatable
-MeanMPG <- c[, mean(mpg), by = gear]
+MeanMPG <- cars[, mean(mpg), by = gear]
 setnames(MeanMPG, "V1", "Meanmpg")
 
 #calc mean and sd for mpg by gear, save as new datatable
-MPG <- c[, .(mean(mpg), sd(mpg)), by = gear] #the period is needed!
+MPG <- cars[, .(mean(mpg), sd(mpg)), by = gear] #the period is needed!
 setnames(MPG, c("V1", "V2"), c("Meanmpg", "SDmpg"))
 
 
@@ -84,15 +84,16 @@ setnames(MPG, c("V1", "V2"), c("Meanmpg", "SDmpg"))
 # Example of a complete 'with i, do j, by group' --------------------------
 
 #with 4-cylinder cars, count number of data, by gear
-c[cyl==4, .N, by = gear]
+cars[cyl==4, .N, by = gear]
 
 #with gas guzzlers, calculate mean disp, by gear
-c[classification == "gas guzzler", mean(disp), by = gear]
+cars[classification == "gas guzzler", mean(disp), by = gear]
 
 
 
 # More advanced techniques ------------------------------------------------
 # Here we will be using some fabricated foraging data
+# each row of data represents a day of feeding by a herbivore
 f <- fread("Input/foraging_data.csv")
 
 f[, .N]
