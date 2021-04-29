@@ -106,7 +106,6 @@ cars[classification == "gas guzzler", mean(disp), by = gear]
 # More advanced techniques ------------------------------------------------
 # Here we will be using some fabricated foraging data
 # each row of data represents a day of feeding by a herbivore
-f <- fread("Input/foraging_data.csv")
 
 
 ##First lets do some basic data exploration
