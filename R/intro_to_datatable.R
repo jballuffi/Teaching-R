@@ -34,7 +34,7 @@ cars[gear > 3]
 cars[gear != 3]
 
 #create new data.table with subset data
-threegear <- c[gear == 3]
+threegear <- cars[gear == 3]
 
 #subset for cars with 3 or 4 gears
 cars[gear == 3 | gear == 4]
@@ -77,7 +77,7 @@ cars[, mean(mpg), by = gear]
 #count number of rows by gear
 cars[, .N, by = gear]
 
-#save mean mpg by gears as new datatable
+#save mean mpg by gears as new data.table
 MeanMPG <- cars[, mean(mpg), by = gear]
 
 #use the data.table function, setnames to change the V1 column name
@@ -85,7 +85,7 @@ setnames(MeanMPG, "V1", "Meanmpg")
 
 #calc mean and sd and max value for mpg by gear, save as new data.table
 #the period before the list of j's is a data.table shortcut for 'list'
-MPG<- cars[, .(mean(mpg), sd(mpg), max(mpg)), by=gear]
+MPG <- cars[, .(mean(mpg), sd(mpg), max(mpg)), by=gear]
 
 #change column names
 setnames(MPG, c("V1", "V2", "V3"), c("mean", "sd", "max"))
