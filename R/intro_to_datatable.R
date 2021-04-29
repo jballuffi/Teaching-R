@@ -227,10 +227,12 @@ ggplot(f)+
 
 #solution: the melt function 
 
-# measure.vars = the columns you want to collapse into onw
+# measure.vars = the columns you want to collapse into one
 # value.name = what this new column will be called
 # variable.name = name of the column that categorizes them
 
+#we are collapsing the browse and graze columns into one and naming this new column 'feedrate'
+#the names of the original column will become factors in the new column 'foodtype'
 feed <- melt(f, measure.vars = c("browse", "graze"), value.name = "feedrate", variable.name = "foodtype")
 
 feed[, .N] #our new data.table has 400 rows, double before
