@@ -133,46 +133,68 @@ f[, .(mean(graze), mean(browse)), by=region]
 f[, .(unique(graze_unit), unique(browse_unit))]
 
 
+
+# Unit conversions --------------------------------------------------------
+
 #okay so we have different units, this means we need to convert the graze and browse columns,
 #then we should change the corresponding values in the units columns to match
 #we want everything to be in g/day
 
 #below we will see a couple options on how to solve this problem
-
+#reload the data.table here to start fresh
+f <- fread("Input/foraging_data.csv")
 
 #option 1:
+#this option uses data.table's version of piping: dt[i, j , by][i, j, by]
+#here we take rows that have a unit in kg/day (i) and multily the feed column by 1000 (j)
+#then immediately after we change the whole unit column to be g/day (the piping)
 f[graze_unit=="kg/day", graze := graze*1000][, graze_unit := "g/day"]
+f[browse_unit=="kg/day", browse := graze*1000][, browse_unit := "g/day"]
 
+#the issue with the above option is what if the data has more than two units?
+#we wouldn't be able to convert the whole column to one unit after we do one conversion
+
+#option 2: work with two or more columns simultaneously
+#this option reassigns the unit column but only on the original subset of rows (i is graze_unit=='kg/day')
+#if there was a 3rd unit, like "bites/day", it would remain untouched
 f[graze_unit=="kg/day", c('graze', 'graze_unit') := .(graze*1000, "g/day")]
+f[browse_unit == "kg/day", c('browse', 'browse_unit') := .(browse*1000, "g/day")]
 
+#if you want to make that one line:
 f[graze_unit=="kg/day"|browse_unit=="kg/day",
   c('graze', 'browse', 'graze_unit', 'browse_unit') 
   := .(graze*1000, browse*1000, "g/day", "g/day")]
 
-un <- grep("unit", names(f), value=TRUE)
+#hypothetical situation: what if we 3 units with different denominators? like kg/day and g/day and kg/week 
 
-f[grepl("kg", list(un))]
+#option 3: incorporating the grepl and sub functions
+#by using grepl in our i, we would be able to change all units with a kg, no matter the unit denominator
+#and then we can use the sub function in our j to swap out those kg for g
+f[grepl("kg", graze_unit), c('graze', 'graze_unit') := .(graze*1000, sub("kg", "g", graze_unit))]
+f[grepl("kg", browse_unit), c('browse', 'browse') := .(browse*1000, sub("kg", "g", browse))]
 
-f[grepl("kg", graze_unit)|grepl("kg", browse_unit),
-  c('graze', 'browse', 'graze_unit', 'browse_unit') 
-  := .(graze*1000, browse*1000, "g/day", "g/day")]
 
+
+# working with dates ------------------------------------------------------
 
 #create an idate
+#ymd is a lubridate function
 f[, date := ymd(date)]
 
+#year is also a lubridate function
 #create a year column
 f[, year := year(idate)]
 
+#alternative solution to creating year using the data.table function tstrsplit
 f[, year2 := tstrsplit(idate, "-", keep=1)]
 
 
-f[, mean(browse), by = ID]
-f[, mean(graze), by = habitat]
-test<-f[, .(mean(graze), sd(graze)), by = c('ID', 'habitat', 'region')]
-setnames(test, c('V1', 'V2'), c('mean_graze', 'sd_graze'))
 
-f[, mean_graze := mean(graze), by = ID]
+
+# data restructuring ------------------------------------------------------
+
+
+
 
 #issue with this formate when plotting
 ggplot(f)+
