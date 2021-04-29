@@ -192,22 +192,32 @@ f[, year2 := tstrsplit(idate, "-", keep=1)]
 
 # data restructuring ------------------------------------------------------
 
+#there is clearly a difference in how much the herbivore feeds on each food type
+f[, .(mean(browse), mean(graze))]
 
+#but this data is not structured correctly
+#we currently wouldn't be able to put food type in a model
+#we also cannot ggplot the relationship correctly (can't make a legend)
 
-
-#issue with this formate when plotting
 ggplot(f)+
   geom_point(aes(x=date, y=graze))+
   geom_point(aes(x=date, y=browse), color="blue3")
 
-#use the melt function
+
+#solution: the melt function 
+
 # measure.vars = the columns you want to collapse into onw
 # value.name = what this new column will be called
 # variable.name = name of the column that categorizes them
 
 feed <- melt(f, measure.vars = c("browse", "graze"), value.name = "feedrate", variable.name = "foodtype")
+
 feed[, .N] #our new data.table has 400 rows, double before
+
+#lets change the graze classification of food to grass
 feed[foodtype=="graze", foodtype := "grass"]
+
+#we can delete the browse and graze units if we'd like
 feed[, c("browse_unit", "graze_unit"):=NULL]
 
 ggplot(feed)+
