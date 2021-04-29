@@ -182,11 +182,32 @@ f[, date := ymd(date)]
 
 #year is also a lubridate function
 #create a year column
-f[, year := year(idate)]
+f[, year := year(date)]
 
 #alternative solution to creating year using the data.table function tstrsplit
-f[, year2 := tstrsplit(idate, "-", keep=1)]
+f[, year2 := tstrsplit(date, "-", keep=1)]
 
+
+
+# merging data.tables -----------------------------------------------------
+
+#lets say someone hands you a separate spreadsheet with all the individuals and their sexes
+#hypothetical sex spreadsheet:
+sexes<- data.table(
+  ID = c("D", "C", "B"),
+  sex = c("M", "M", "F")
+)
+
+#how could we merge this information onto our feeding data? 
+#solution: data.table's merge function
+
+#list tables you want to merge as x and y (here x = f and y = sexes)
+#by argument is the column you wish to merge by (alternatively by.x and by.y)
+#"all = TRUE" means keep all rows of data
+#"all.x or all.y = TRUE" means keep all rows of one or the other table
+
+#in this case we are merging the two data.tables by ID, and we want to keep all the rows in f data.table
+f <- merge(f, sexes, by = "ID", all.x = TRUE)
 
 
 
