@@ -108,21 +108,39 @@ cars[classification == "gas guzzler", mean(disp), by = gear]
 # each row of data represents a day of feeding by a herbivore
 f <- fread("Input/foraging_data.csv")
 
+
+##First lets do some basic data exploration
+
+#get length of the whole data.table
 f[, .N]
+
+#check out what individuals are in this data
 f[, unique(ID)]
+
+#what habitats are we dealing with?
+f[, unique(habitat)]
+
+#are all individuals in all habitats?
 f[, unique(ID), by = habitat]
+
+#how many rows of data exist for each individual?
 f[, .N, by = ID]
 
-f[, mean(graze)]
-f[, mean(browse)]
+#return mean grazing amounts and mean browsing amounts
+f[, .(mean(graze), mean(browse)), by=region]
 
-f[, unique(graze_unit)] #check out grazing units
-f[, unique(browse_unit)] #check out grazing units
-
-
+#what units were grazing and browsing measured in?
+f[, .(unique(graze_unit), unique(browse_unit))]
 
 
-#units aren't the same, lets convert using data.table
+#okay so we have different units, this means we need to convert the graze and browse columns,
+#then we should change the corresponding values in the units columns to match
+#we want everything to be in g/day
+
+#below we will see a couple options on how to solve this problem
+
+
+#option 1:
 f[graze_unit=="kg/day", graze := graze*1000][, graze_unit := "g/day"]
 
 f[graze_unit=="kg/day", c('graze', 'graze_unit') := .(graze*1000, "g/day")]
