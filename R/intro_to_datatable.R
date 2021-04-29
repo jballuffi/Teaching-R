@@ -63,7 +63,7 @@ cars[vs == 0, mean(gear)]
 cars[mpg < 25, classification := "gas guzzler"]
 
 #with cars leftover, classify as gas mazer
-cars[is.na(classification), classification := "gas mazer"]
+cars[is.na(classification), classification := "good car"]
 
 
 
@@ -74,16 +74,22 @@ cars[is.na(classification), classification := "gas mazer"]
 #calculate mean mpg by gear
 cars[, mean(mpg), by = gear]
 
-#count number of data points by gear
+#count number of rows by gear
 cars[, .N, by = gear]
 
 #save mean mpg by gears as new datatable
 MeanMPG <- cars[, mean(mpg), by = gear]
+
+#use the data.table function, setnames to change the V1 column name
 setnames(MeanMPG, "V1", "Meanmpg")
 
-#calc mean and sd for mpg by gear, save as new datatable
-MPG <- cars[, .(mean(mpg), sd(mpg)), by = gear] #the period is needed!
-setnames(MPG, c("V1", "V2"), c("Meanmpg", "SDmpg"))
+#calc mean and sd and max value for mpg by gear, save as new data.table
+#the period before the list of j's is a data.table shortcut for 'list'
+MPG<- cars[, .(mean(mpg), sd(mpg), max(mpg)), by=gear]
+
+#change column names
+setnames(MPG, c("V1", "V2", "V3"), c("mean", "sd", "max"))
+
 
 
 
