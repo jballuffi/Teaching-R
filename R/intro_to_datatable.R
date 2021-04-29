@@ -243,10 +243,17 @@ feed[foodtype=="graze", foodtype := "grass"]
 #we can delete the browse and graze units if we'd like
 feed[, c("browse_unit", "graze_unit"):=NULL]
 
+#now we can correctly plot this in ggplot and assign foodtype as a color
 ggplot(feed)+
   geom_point(aes(x=date, y=feedrate, color=foodtype))
 
 
+
+# applying linear models to data using the 'by' ----------------------
+
+#here we are interested in the effect of food type and region on feeding rate
+#like in this model
+summary(lm(feedrate ~ foodtype + region, data = feed))
 
 
 rsq(lm(feedrate~foodtype + date, data=feed))
