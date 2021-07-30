@@ -7,11 +7,12 @@ library(ggplot2)
 
 #fread is an efficient way to read in data that's automatically classified as a data.table
 f <- fread("Input/foraging_data.csv")
+
 #alternatively you can convert a data.frame into a data.table with the function as.data.table()
 cars <- as.data.table(mtcars)
 
 
-#syntax for data.table:
+# syntax for data.table:
 
 # DT[i, j, by]
 
@@ -50,10 +51,12 @@ cars[gear == 3 & vs == 0]
 #.N is a special symbol in data.table, it counts the number of rows
 #.N is not a function, you can't apply it to anything specific (e.g. this wouldn't work: .N(gear))
 #other examples of species symbols .SD, .BY, .I, but we wont get into those today
-cars[, .N]
+cars[gear==3, .N]
 
 #calculate mean gear with all data
 cars[, mean(gear)]
+
+mean(cars$gear)
 
 #with vs of 0, calculate mean gear
 cars[vs == 0, mean(gear)]
@@ -75,7 +78,8 @@ cars[is.na(classification), classification := "good car"]
 cars[, mean(mpg), by = gear]
 
 #count number of rows by gear
-cars[, .N, by = gear]
+countdata <- cars[, .N, by = gear]
+write.csv(countdata, "Output/counts.csv")
 
 #save mean mpg by gears as new data.table
 MeanMPG <- cars[, mean(mpg), by = gear]
@@ -195,9 +199,9 @@ f[, year2 := tstrsplit(date, "-", keep=1)]
 #lets say someone hands you a separate spreadsheet with all the individuals and their sexes
 #hypothetical sex spreadsheet:
 sexes<- data.table(
-  ID = c("D", "C", "B"),
+  ID = c("D", "C", "B"), 
   sex = c("M", "M", "F")
-)
+  )
 
 #how could we merge this information onto our feeding data? 
 #solution: data.table's merge function
@@ -208,7 +212,7 @@ sexes<- data.table(
 #"all.x or all.y = TRUE" means keep all rows of one or the other table
 
 #in this case we are merging the two data.tables by ID, and we want to keep all the rows in f data.table
-f <- merge(f, sexes, by = "ID", all.x = TRUE)
+newsheet <- merge(f, sexes, by = "ID", all.x = TRUE)
 
 
 
