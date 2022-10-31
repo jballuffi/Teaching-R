@@ -54,13 +54,9 @@ ft[Diet == "B", Performance := sample(27:32, size = nrow(.SD), replace = TRUE)]
 
 ft[Diet == "C", Performance := sample(33:37, size = nrow(.SD), replace = TRUE)]
 
-inds <- c("An_1", "An_2", "An_3")
-
-test <- ft[ID %in% inds]
-
-
 
 #save as CSV file into input folder
 write.csv(Data, file = "Input/foraging_data.csv")
 
 write.csv(ft, file = "Input/feeding_trials_workshop.csv")
+
