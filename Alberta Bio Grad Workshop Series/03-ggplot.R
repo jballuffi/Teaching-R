@@ -39,7 +39,7 @@ ggplot(data = biomass) + geom_point(aes(x = canopy_cover, y = shrub_biomass, col
 #with the first trend-line
 ggplot(data = biomass) + geom_point(aes(x = canopy_cover, y = shrub_biomass, colour = SA)) + 
   geom_smooth(aes(x = canopy_cover, y = shrub_biomass, colour = SA), method = "lm") + 
-  geom_smooth(aes(x = canopy_cover, y = shrub_biomass), method = "lm") # add first trend-line
+  geom_smooth(aes(x = canopy_cover, y = shrub_biomass), method = "lm", se = FALSE) # add first trend-line
 
 #bar chart to compare biomass between areas
 ggplot(data = biomass) + geom_bar(aes(x = SA, y = shrub_biomass), stat="summary", fun = "mean")
@@ -72,6 +72,10 @@ ggplot(data = biomass) + geom_point(aes(x = canopy_cover, y = shrub_biomass, col
   theme_classic()
 
 # theme components --------------------------------------------------------
+
+#these are all the arguments you can use in the theme() function
+#you have control over pretty much every aspect of the figure's appearance
+
 #https://ggplot2.tidyverse.org/reference/theme.html
 
 theme(
@@ -322,7 +326,7 @@ box_plot <- ggplot(data = biomass) + geom_boxplot(aes(x = SA, y = shrub_biomass)
   theme_classic(base_family = "Times New Roman") + 
   theme(text= element_text(size=18), axis.text.x= element_text(size=18,colour = "black"),
         axis.text.y= element_text(size=16,colour = "black")) + 
-  scale_y_continuous("\n Shrub biomass (kg/ha) \n", n.breaks =5, labels = scales::comma) #+ 
+  scale_y_continuous("\n Shrub biomass (kg/ha) \n", n.breaks =5, labels = scales::comma) + 
   xlab("") + #no x axis label 
   scale_x_discrete(label=c("\n Eastern \nOntario", "\n Western \nOntario")) #change the x tick labels
 
@@ -430,7 +434,7 @@ response <- cbind(response, random_canopy_cover)
 mean(biomass$basal_area)
 
 ##Add canopy closure and ecosite to the response data frame
-response$basal_area <- 17.73401
+response$basal_area <- mean(biomass$basal_area)
 response$SA_binary <- 0 # EO
 
 ##Clean up data frame
