@@ -1,0 +1,13 @@
+﻿Study_area,estimate,CI_down,CI_up,covariate
+Nakina,0.62,0.38,0.34,Early Seral
+Pickle Lake,0.19,0.19,0.27,Early Seral
+Cochrane,0.05,0.05,0.09,Early Seral
+Nakina,1.39,0.16,0.19,Closed
+Pickle Lake,1.51,0.23,0.33,Closed
+Cochrane,1.31,0.13,0.12,Closed
+Nakina,1.32,0.24,0.35,Lowlands
+Pickle Lake,1.65,0.5,0.6,Lowlands
+Cochrane,1.14,0.11,0.11,Lowlands
+Nakina,0.06,0.06,0.11,LF
+Pickle Lake,0,0,0,LF
+Cochrane,0.22,0.21,0.26,LF
