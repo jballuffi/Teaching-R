@@ -1,22 +1,38 @@
-#extracting model outputs and results in a reproduceable way
+#script for extracting model outputs and exporting results tables. 
+#author: Juliana Balluffi-Fry
 
+#there are a number of packages that are used today
 library(data.table)
 library(ggplot2)
-library(AICcmodavg)
-library(rsq)
-library(arm)
 library(dplyr)
 
+#these three packages are specialized for model results
+library(AICcmodavg) #use to create AIC tables
+library(rsq) #extract R2s from various types of models
+library(arm) #this package is for regression and multilevel/hierarchical Models, but
+#here I use the arm package for it's function se.coef that extracts standard errors of coef
 
+
+#load biomass data 
 bio <- fread("Input/biomass.csv")
 
 
-#how do basic linear models work? 
+
+# create a basic linear regression and explore the output -----------------
+
+
+#make a basic linear regression 
 mod <- lm(bio$shrub_biomass ~ bio$Julian_day)
 
-saveRDS(mod, "Output/model.rds")
-mod2 <- readRDS("Output/model.rds")
+#if this model uses a lot of data and computing power, I suggest saving as RDS
+saveRDS(mod, "Output/model.rds") #save as rds
+mod2 <- readRDS("Output/model.rds") #read in later if you want to pick it up again
 
+#normally people use the following functions and copy and paste the outputs somewhere else
+summary(mod)
+anova(mod)
+
+#the function coef will return the coefficientes (slopes) and intercept
 coef(mod)
 
 slope <- coef(mod)["bio$Julian_day"]
@@ -54,7 +70,7 @@ getmod <- function(x, y) {
   seOut <- data.table(t(se.coef(model)))
   seOut<-round(seOut, 3)
   #Paste coef and standard errors together, rename cols
-  coefse<-data.table(t(paste(coefOut, seOut, sep=" ± ")))
+  coefse<-data.table(t(paste0(coefOut, " ± ", seOut)))
   setnames(coefse, paste0(colnames(coefOut)))
   #collect R2s and change column name
   rsqOut <- data.table(rsq(model))
