@@ -101,9 +101,8 @@ ft[, mean(Performance), by = Diet]
 #caclulate mean and sd by diet, save as separate data
 stats <- ft[, .(mean(Performance), sd(Performance)), by = Diet]
 
-#rename col names using data.table function
-setnames(stats, c("V1", "V2"), c("Mean", "sd"))
-
+#same code but assign column names
+stats <- ft[, .(mean = mean(Performance), sd = sd(Performance)), by = Diet]
 
 
 # calculate intake rates  -------------------------------------------------
