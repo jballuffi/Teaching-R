@@ -154,11 +154,9 @@ days[, Day := tstrsplit(Day, "_", keep = 2)]
 
 ggplot(days)+
   geom_boxplot(aes(x = Day, y = Intake_rate))
-
+  
 
 #now we can plot intake rate by the day of the trial
 ft[, ID_date := paste0(ID, "_", Date)]
 #you can see the animals eat more on day 1
-
-
 
