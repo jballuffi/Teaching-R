@@ -21,7 +21,7 @@
 DT <- mtcars #CRTL + ENTER to run a line of code (COMMAND + ENTER for Macs)
 
 #Import data from a csv (put the csv in a folder WITHIN your project - mine is called 'data')
-anyname <- read.csv("data/data.file.2022") #hit 'Tab' key after / to show all data within that folder
+#anyname <- read.csv("data/data.file.2022") #hit 'Tab' key after / to show all data within that folder
 
 
 #Using built-in functions to look at data ---------------------------------
@@ -56,14 +56,15 @@ class(DT)  #how your entire dataset is classified (data frame)
 
 #Specifying a column ------------------------------------------
 
+
 #make new col that classifies gear as a 'factor' (a categorical data type)
 #You might need to do this if you want 'gear' to be a categorical variable for a plot
 # '$' is R-language for specifying a specific column within a data frame
-
 DT$gearf <- as.factor(DT$gear) #If named the new column 'gear' instead of 'gearf'
-                                #it would overwrite the gear column
+#it would overwrite the gear column
 class(DT$gearf) #factor
 class(DT$gear)  #numeric
+
 
 #calculate mean horse power of cars and name the mean
 ?mean
@@ -76,6 +77,25 @@ meanhp * 5
 
 #Do this all in one line and name the output value as "calc"
 calc <- (mean(DT$hp) * 5)
+
+
+
+# create base plots --------------------------------------------------------------
+
+#let's say we are interested in miles per gallon as a response
+
+#make a histogram of the response
+hist(log(DT$mpg))
+
+#plot it against another numerical variable
+plot(mpg ~ disp, DT)
+
+#plot mpg in response to gear count
+plot(mpg ~ gear, DT)
+
+#this looks strange, should maybe be a boxplot?
+boxplot(mpg ~ gear, DT)
+
 
 
 # Installing and loading packages -----------------------
